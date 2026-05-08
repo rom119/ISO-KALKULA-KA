@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expoziční kalkulačka</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: white;
+    margin: 0;
+    padding: 20px;
+}
+.container {
+    max-width: 420px;
+    margin: auto;
+    background: #1e1e1e;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+h1 {
+    text-align: center;
+}
+label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+input, select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: #2d2d2d;
+    color: white;
+    font-size: 16px;
+}
+button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: #3b82f6;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+.result {
+    margin-top: 20px;
+    padding: 15px;
+    background: #2d2d2d;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 18px;
+}
+.small {
+    font-size: 14px;
+    opacity: 0.7;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Expoziční kalkulačka</h1>
+
+    <label>Clona (f)</label>
+    <input type="number" id="aperture" step="0.1" value="4">
+
+    <label>ISO</label>
+    <input type="number" id="iso" value="100">
+
+    <label>EV</label>
+    <input type="number" id="ev" step="0.1" value="12">
+
+    <button onclick="calculate()">Spočítat čas</button>
+
+    <div class="result" id="result">
+        Čas se zobrazí zde
+    </div>
+</div>
+
+<script>
+function formatShutter(seconds) {
+    if (seconds >= 1) {
+        return seconds.toFixed(1) + ' s';
+    }
+
+    const denominator = Math.round(1 / seconds);
+    return '1/' + denominator + ' s';
+}
+
+function calculate() {
+    const aperture = parseFloat(document.getElementById('aperture').value);
+    const iso = parseFloat(document.getElementById('iso').value);
+    const ev = parseFloat(document.getElementById('ev').value);
+
+    const shutter = (Math.pow(aperture, 2) * 100) / (Math.pow(2, ev) * iso);
+
+    document.getElementById('result').innerHTML = `
+        <div><strong>${formatShutter(shutter)}</strong></div>
+        <div class="small">${shutter.toFixed(6)} s</div>
+    `;
+}
+</script>
+</body>
+</html>
