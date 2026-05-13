@@ -101,7 +101,7 @@ button {
         <option>1/2000</option>
     </select>
 
-    <button onclick="calculate()">Spočítat EV</button>
+    <button onclick="calculate()">Zobrazit nastavení</button>
 
     <div class="result" id="result">
         Čas se zobrazí zde
@@ -125,10 +125,8 @@ function calculate() {
 
     const shutter = 1 / parseFloat(shutterText.split('/')[1]);
 
-    const ev = Math.log2((Math.pow(aperture, 2) / shutter) * (100 / iso));
-
     document.getElementById('result').innerHTML = `
-        <div><strong>EV ${ev.toFixed(1)}</strong></div>
+        <div><strong>${shutterText} s</strong></div>
         <div class="small">Clona f/${aperture} • ISO ${iso} • ${shutterText} s</div>
     `;
 }
