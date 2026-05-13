@@ -90,7 +90,7 @@ button {
         <option>6400</option>
     </select>
 
-    <label>Čas</label>
+    <label>Expoziční čas</label>
     <select id="shutter">
         <option>1/30</option>
         <option>1/60</option>
@@ -101,7 +101,7 @@ button {
         <option>1/2000</option>
     </select>
 
-    <button onclick="calculate()">Zobrazit nastavení</button>
+    <button onclick="calculate()">Spočítat</button>
 
     <div class="result" id="result">
         Čas se zobrazí zde
@@ -119,15 +119,13 @@ function formatShutter(seconds) {
 }
 
 function calculate() {
-    const aperture = parseFloat(document.getElementById('aperture').value);
-    const iso = parseFloat(document.getElementById('iso').value);
+    const aperture = document.getElementById('aperture').value;
+    const iso = document.getElementById('iso').value;
     const shutterText = document.getElementById('shutter').value;
-
-    const shutter = 1 / parseFloat(shutterText.split('/')[1]);
 
     document.getElementById('result').innerHTML = `
         <div><strong>${shutterText} s</strong></div>
-        <div class="small">Clona f/${aperture} • ISO ${iso} • ${shutterText} s</div>
+        <div class="small">f/${aperture} • ISO ${iso}</div>
     `;
 }
 </script>
