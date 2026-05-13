@@ -67,7 +67,7 @@ button {
     <h1>Expoziční kalkulačka</h1>
 
     <label>Clona (f)</label>
-    <select id="aperture">
+    <select id="aperture" onchange="calculate()">
         <option>1.4</option>
         <option>2</option>
         <option>2.8</option>
@@ -80,7 +80,7 @@ button {
     </select>
 
     <label>ISO</label>
-    <select id="iso">
+    <select id="iso" onchange="calculate()">
         <option selected>100</option>
         <option>200</option>
         <option>400</option>
@@ -91,7 +91,7 @@ button {
     </select>
 
     <label>Expoziční čas</label>
-    <select id="shutter">
+    <select id="shutter" onchange="calculate()">
         <option>1/30</option>
         <option>1/60</option>
         <option selected>1/125</option>
