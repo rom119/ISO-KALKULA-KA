@@ -109,25 +109,18 @@ button {
 </div>
 
 <script>
-function formatShutter(seconds) {
-    if (seconds >= 1) {
-        return seconds.toFixed(1) + ' s';
-    }
-
-    const denominator = Math.round(1 / seconds);
-    return '1/' + denominator + ' s';
-}
-
 function calculate() {
     const aperture = document.getElementById('aperture').value;
     const iso = document.getElementById('iso').value;
-    const shutterText = document.getElementById('shutter').value;
+    const shutter = document.getElementById('shutter').value;
 
     document.getElementById('result').innerHTML = `
-        <div><strong>${shutterText} s</strong></div>
+        <div><strong>${shutter} s</strong></div>
         <div class="small">f/${aperture} • ISO ${iso}</div>
     `;
 }
+
+window.onload = calculate;
 </script>
 </body>
 </html>
