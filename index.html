@@ -1,4 +1,112 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expoziční kalkulačka</title>
+
+<style>
+body{
+    background:#111;
+    color:white;
+    font-family:Arial;
+    padding:20px;
+}
+
+.container{
+    max-width:420px;
+    margin:auto;
+    background:#1e1e1e;
+    padding:20px;
+    border-radius:16px;
+}
+
+h1{
+    text-align:center;
+}
+
+label{
+    display:block;
+    margin-top:15px;
+    margin-bottom:5px;
+}
+
+select{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#2d2d2d;
+    color:white;
+    font-size:16px;
+}
+
+.result{
+    margin-top:20px;
+    background:#2d2d2d;
+    padding:15px;
+    border-radius:12px;
+    text-align:center;
+    font-size:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Expoziční kalkulačka</h1>
+
+<label>Režim výpočtu</label>
+<select id="mode" onchange="calculate()">
+    <option value="shutter">Spočítat čas</option>
+    <option value="aperture">Spočítat clonu</option>
+    <option value="iso">Spočítat ISO</option>
+</select>
+
+<label>Clona</label>
+<select id="aperture" onchange="calculate()">
+    <option>1.4</option>
+    <option>2</option>
+    <option>2.8</option>
+    <option selected>4</option>
+    <option>5.6</option>
+    <option>8</option>
+    <option>11</option>
+    <option>16</option>
+</select>
+
+<label>ISO</label>
+<select id="iso" onchange="calculate()">
+    <option>100</option>
+    <option selected>200</option>
+    <option>400</option>
+    <option>800</option>
+    <option>1600</option>
+    <option>3200</option>
+    <option>6400</option>
+</select>
+
+<label>Čas</label>
+<select id="shutter" onchange="calculate()">
+    <option>1/30</option>
+    <option>1/60</option>
+    <option selected>1/125</option>
+    <option>1/250</option>
+    <option>1/500</option>
+    <option>1/1000</option>
+    <option>1/2000</option>
+</select>
+
+<div class="result" id="result">
+Výsledek
+</div>
+
+</div>
+
 <script>
+
 function calculate() {
 
     const mode =
@@ -20,45 +128,97 @@ function calculate() {
         parseFloat(isoSelect.value);
 
     let shutter =
-        1 / parseFloat(shutterSelect.value.split("/")[1]);
+        1 / parseFloat(
+            shutterSelect.value.split("/")[1]
+        );
 
-    // SUNNY 16
+    // Sunny 16
 
     if (mode === "shutter") {
 
         const calcShutter =
-            (100 / iso) * Math.pow(aperture / 16, 2);
+            (100 / iso) *
+            Math.pow(aperture / 16, 2);
 
-        shutter =
-            "1/" + Math.round(1 / calcShutter);
+        const shutterText =
+            "1/" +
+            Math.round(1 / calcShutter);
 
-        shutterSelect.value = shutter;
+        if ([...shutterSelect.options]
+            .some(o => o.value === shutterText)) {
 
+            shutterSelect.value =
+                shutterText;
+        }
+
+        document.getElementById("result")
+            .innerHTML =
+            "Čas: <strong>" +
+            shutterText +
+            " s</strong>";
     }
 
     if (mode === "aperture") {
 
         const calcAperture =
-            16 * Math.sqrt(shutter * iso / 100);
+            16 *
+            Math.sqrt(
+                shutter * iso / 100
+            );
 
         apertureSelect.value =
-            calcAperture.toFixed(1);
+            nearestAperture(calcAperture);
 
+        document.getElementById("result")
+            .innerHTML =
+            "Clona: <strong>f/" +
+            apertureSelect.value +
+            "</strong>";
     }
 
     if (mode === "iso") {
 
         const calcIso =
-            (100 * Math.pow(aperture / 16, 2)) / shutter;
+            (100 *
+            Math.pow(aperture / 16, 2))
+            / shutter;
 
         isoSelect.value =
-            Math.round(calcIso);
+            nearestISO(calcIso);
 
+        document.getElementById("result")
+            .innerHTML =
+            "ISO: <strong>" +
+            isoSelect.value +
+            "</strong>";
     }
+}
 
-    document.getElementById("result").innerHTML =
-        "Aktualizováno";
+function nearestISO(value){
+
+    const isoValues =
+        [100,200,400,800,1600,3200,6400];
+
+    return isoValues.reduce((a,b)=>
+        Math.abs(b-value) <
+        Math.abs(a-value) ? b : a
+    );
+}
+
+function nearestAperture(value){
+
+    const apertures =
+        [1.4,2,2.8,4,5.6,8,11,16];
+
+    return apertures.reduce((a,b)=>
+        Math.abs(b-value) <
+        Math.abs(a-value) ? b : a
+    );
 }
 
 calculate();
+
 </script>
+
+</body>
+</html>
