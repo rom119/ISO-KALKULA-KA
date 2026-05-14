@@ -109,8 +109,14 @@ button {
     <button onclick="calculate()">Spočítat</button>
 
     <div class="result" id="result">
-        Čas se zobrazí zde
-    </div>
+</div>
+
+<label>Režim výpočtu</label>
+<select id="mode" onchange="calculate()">
+    <option value="shutter">Spočítat čas</option>
+    <option value="aperture">Spočítat clonu</option>
+    <option value="iso">Spočítat ISO</option>
+</select>
 </div>
 
 <script>
@@ -118,24 +124,41 @@ function calculate() {
 
     const aperture = parseFloat(document.getElementById("aperture").value);
     const iso = parseFloat(document.getElementById("iso").value);
+    const shutterSelect = document.getElementById("shutter").value;
+    const mode = document.getElementById("mode").value;
 
-    // základ podle Sunny 16
-    const baseShutter = 100 / iso;
+    const shutter = 1 / parseFloat(shutterSelect.split('/')[1]);
 
-    // přepočet podle clony
-    const shutter = baseShutter * Math.pow(aperture / 16, 2);
+    let result = "";
 
-    let shutterText;
+    if (mode === "shutter") {
 
-    if (shutter >= 1) {
-        shutterText = shutter.toFixed(1) + " s";
-    } else {
-        shutterText = "1/" + Math.round(1 / shutter) + " s";
+        const calcShutter = (100 / iso) * Math.pow(aperture / 16, 2);
+
+        let shutterText;
+
+        if (calcShutter >= 1) {
+            shutterText = calcShutter.toFixed(1) + " s";
+        } else {
+            shutterText = "1/" + Math.round(1 / calcShutter) + " s";
+        }
+
+        result = "Čas: <strong>" + shutterText + "</strong>";
+
+    } else if (mode === "aperture") {
+
+        const calcAperture = 16 * Math.sqrt(shutter * iso / 100);
+
+        result = "Clona: <strong>f/" + calcAperture.toFixed(1) + "</strong>";
+
+    } else if (mode === "iso") {
+
+        const calcIso = (100 * Math.pow(aperture / 16, 2)) / shutter;
+
+        result = "ISO: <strong>" + Math.round(calcIso) + "</strong>";
     }
 
-    document.getElementById("result").innerHTML =
-        "Čas: <strong>" + shutterText + "</strong><br>" +
-        "f/" + aperture + " • ISO " + iso;
+    document.getElementById("result").innerHTML = result;
 }
 
 calculate();
